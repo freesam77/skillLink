@@ -1,6 +1,7 @@
 const express = require("express"),
   mongoose = require("mongoose"),
-  db = require("./config/keys").mongoURI;
+//   db = require("./config/keys").mongoURI,
+  dotenv = require("dotenv").config()
 
 const users = require("./routes/api/users"),
   profile = require("./routes/api/profile"),
@@ -8,8 +9,11 @@ const users = require("./routes/api/users"),
 
 const app = express();
 
+const url = process.env.MONGODB_URI
+console.log("url is:", url)
+
 mongoose
-  .connect(db)
+  .connect(url)
   .then(() => console.log("mongoDB is connected"))
   .catch(err => {
     console.log(err);
