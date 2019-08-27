@@ -1,7 +1,8 @@
 const express = require("express"),
   mongoose = require("mongoose"),
 //   db = require("./config/keys").mongoURI,
-  dotenv = require("dotenv").config()
+  dotenv = require("dotenv").config(),
+  bodyParser = require("body-parser");
 
 const users = require("./routes/api/users"),
   profile = require("./routes/api/profile"),
@@ -9,9 +10,11 @@ const users = require("./routes/api/users"),
 
 const app = express();
 
-const url = process.env.MONGODB_URI
-console.log("url is:", url)
+const url = process.env.MONGODB_URI;
+console.log("url is:", url);
 
+
+// DB config
 mongoose
   .connect(url)
   .then(() => console.log("mongoDB is connected"))
@@ -21,10 +24,14 @@ mongoose
 
 app.get("/", (req, res) => res.send("Hello World"));
 
+// Body Parser middleware
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+
 // Use Routes
-app.use('/api/users', users);
-app.use('/api/profile', profile);
-app.use('/api/posts', posts);
+app.use("/api/users", users);
+app.use("/api/profile", profile);
+app.use("/api/posts", posts);
 
 const port = process.env.PORT || 3000;
 
