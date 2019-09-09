@@ -1,8 +1,9 @@
 const express = require("express"),
   mongoose = require("mongoose"),
-//   db = require("./config/keys").mongoURI,
+  //   db = require("./config/keys").mongoURI,
   dotenv = require("dotenv").config(),
-  bodyParser = require("body-parser");
+  bodyParser = require("body-parser"),
+  passport = require("passport");
 
 const users = require("./routes/api/users"),
   profile = require("./routes/api/profile"),
@@ -13,7 +14,6 @@ const app = express();
 const url = process.env.MONGODB_URI;
 console.log("url is:", url);
 
-
 // DB config
 mongoose
   .connect(url)
@@ -22,11 +22,14 @@ mongoose
     console.log(err);
   });
 
-app.get("/", (req, res) => res.send("Hello World"));
+//   Passport Middleware
+app.use(passport.initialize());
+//   Passport Config
+require("./config/passport")(passport);
 
 // Body Parser middleware
-app.use(bodyParser.urlencoded({extended: false}))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Use Routes
 app.use("/api/users", users);
